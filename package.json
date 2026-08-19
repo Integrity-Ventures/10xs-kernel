@@ -1,0 +1,18 @@
+{
+  "name": "@10xs/kernel",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The gate: run an AI agent's completion report through re-measurement and see what survives.",
+  "license": "MIT",
+  "bin": {
+    "10xs": "bin/10xs.mjs"
+  },
+  "files": [
+    "spec/",
+    "verify/",
+    "bin/"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

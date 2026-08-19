@@ -1,0 +1,48 @@
+# 10xs Governance Kernel — Core Rules
+# Canonical specification (language-agnostic)
+# Runtime adapters load this file; never hardcode these values in code.
+#
+# Hour bands are NOT part of core: they are project-specific tuning, not a
+# universal governance rule. An example hour-band profile ships at
+# spec/profiles/10xs.yaml — apply it, write your own, or skip hour bands
+# entirely. See R14 in the extraction report for why they were pulled out.
+
+microtask:
+  maxFiles: 5
+  maxDependencies: 3
+  requiresTestingStrategy: true
+  requiresImplementationNotes: true
+  enforcementMode: warn
+
+story:
+  maxDependencies: 5
+  maxMicrotasks: 8
+  requiresTestingStrategy: false
+  requiresImplementationNotes: false
+
+epic:
+  maxDependencies: 3
+  maxStories: 5
+  requiresTestingStrategy: false
+  requiresImplementationNotes: false
+
+# Tolerance used ONLY to decide when a Phase-2 total is far enough above the
+# Phase-1 estimate to warrant a loud `hour_overbudget` warning for a human.
+# It is NOT a clamp: hours are never scaled down to fit it.
+# Meaningful only if you also adopt an hour-band profile (see above) — a
+# ceiling with no hours to bound is inert.
+budget:
+  ceilingByScale:
+    micro: 1.0
+    small: 1.2
+    standard: 1.5
+    enterprise: 2.0
+
+decomposition:
+  hierarchy:
+    - epic
+    - story
+    - microtask
+  maxDepth: 3
+  maxChildrenPerParent: 8
+  requiresDependencyMapping: true
