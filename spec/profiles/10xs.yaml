@@ -1,0 +1,30 @@
+# Example hour-band profile — NOT part of core (see spec/rules/core.yaml).
+#
+# This is the profile the 10xs monorepo itself runs, extracted verbatim from
+# kernel-spec/rules/core.yaml at the moment of OSS extraction (R14). It is an
+# example, not a default: a repo with no profile applied gets no hour bands
+# at all, and that is a supported, working state (spec/rules/core.yaml says
+# so explicitly).
+#
+# ── HOUR BANDS MUST COMPOSE ──────────────────────────────────────────────
+# Every parent band is DERIVED from its children, so a unit sitting at its
+# own legal minimum is still legally decomposable:
+#
+#   story.minHours = 3 x microtask.minHours                  =  3 x 2  =   6
+#   story.maxHours = story.maxMicrotasks x microtask.maxHours =  8 x 4  =  32
+#   epic.minHours  = 2 x story.minHours                       =  2 x 6  =  12
+#   epic.maxHours  = epic.maxStories x story.maxHours         =  5 x 32 = 160
+#
+# If you change a child band you MUST recompute every parent band above it.
+
+microtask:
+  minHours: 2
+  maxHours: 4
+
+story:
+  minHours: 6
+  maxHours: 32
+
+epic:
+  minHours: 12
+  maxHours: 160

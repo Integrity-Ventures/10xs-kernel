@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "execution-unit.schema.json",
+  "title": "Governance Execution Unit",
+  "description": "Base schema for all execution units in the governance hierarchy",
+  "type": "object",
+  "required": ["id", "title", "description", "priority", "estimatedHours", "type"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+    "description": { "type": "string", "minLength": 10 },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"]
+    },
+    "estimatedHours": { "type": "number", "exclusiveMinimum": 0 },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "in_progress", "completed", "blocked"],
+      "default": "pending"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["epic", "story", "microtask"]
+    }
+  }
+}

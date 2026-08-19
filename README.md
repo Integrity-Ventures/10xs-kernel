@@ -10,9 +10,14 @@ against your own agents.
 
 ## The one command
 
-`UNVERIFIED — pending MT-1a.` This is `20260819_01`'s spec, not yet landed or run:
+The gate runs today from a clone of this repo. The `npx` form is what it becomes the day the
+package is published — it is not on npm yet:
 
 ```bash
+# from a clone of this repo (works now):
+node bin/10xs.mjs check --report <path-to-completion-report> --base <git-ref>
+
+# once published:
 npx @10xs/kernel check --report <path-to-completion-report> --base <git-ref>
 # exit 0 — the report survived re-measurement
 # exit 1 — it did not; findings print to stdout
@@ -23,8 +28,7 @@ npx @10xs/kernel check --report <path-to-completion-report> --base <git-ref>
 
 ```
 Before claiming a task done, run `10xs harvest --mt-id <id> --base <ref> --out <dir>`
-(flags per 20260819_01, UNVERIFIED pending MT-1a) and use its output as the top of
-your report, unedited. Never state a sha, test count, file size, or pass/fail claim
+and use its output as the top of your report, unedited. Never state a sha, test count, file size, or pass/fail claim
 you did not have the tool measure — if you need a new fact, re-run the harvester.
 Put reasoning and any claim the tool can't check under the heading
 "## Executor narrative (unverified claim)"; everything below it is read as prose,

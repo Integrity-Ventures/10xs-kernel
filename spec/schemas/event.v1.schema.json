@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://10xs.ai/schema/event.v1.schema.json",
+  "title": "10xs governance event, version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "ts",
+    "round",
+    "project",
+    "mt_id",
+    "kind",
+    "actor",
+    "subject",
+    "claim",
+    "observed",
+    "evidence",
+    "notes"
+  ],
+  "properties": {
+    "schema": { "const": "10xs.event/1" },
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "round": { "type": "string", "pattern": "^[0-9]{8}-[a-z0-9][a-z0-9-]*$" },
+    "project": { "type": "string", "minLength": 1 },
+    "mt_id": { "type": ["string", "null"], "minLength": 1 },
+    "kind": {
+      "enum": [
+        "dispatched",
+        "instruction_ready",
+        "pushed",
+        "validated",
+        "integrated",
+        "hand_tested",
+        "merged",
+        "dropped",
+        "probe_run",
+        "gate_compare",
+        "correction"
+      ]
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "model", "machine", "role"],
+      "properties": {
+        "kind": { "enum": ["agent", "human"] },
+        "model": { "type": ["string", "null"] },
+        "machine": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 }
+      }
+    },
+    "subject": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["branch", "sha", "base_sha"],
+      "properties": {
+        "branch": { "type": ["string", "null"] },
+        "sha": { "type": ["string", "null"] },
+        "base_sha": { "type": ["string", "null"] }
+      }
+    },
+    "claim": {
+      "type": ["object", "null"],
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] },
+      "description": "Open object of scalars. Conventional keys (see engineering/events/README.md 'Tracker view conventions' for the full column mapping): title (instruction_ready), report_path / report (pushed, report is a legacy fallback key), pr / dev_sha (merged), and on a correction event: corrects (path of the superseded event file, required by convention), field (dotted path of the corrected field, e.g. subject.sha), wrong_value, correct_value."
+    },
+    "observed": {
+      "type": ["object", "null"],
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] },
+      "description": "Open object of scalars. Conventional keys (see engineering/events/README.md 'Tracker view conventions' for the full column mapping): report_on_origin / premise_recheck / cross_checks / hand_test (validated), gates_at_integration / gates (integrated, gates is a legacy fallback key), build_verified / merge_order / conflicts (integrated), hand_test (also on hand_tested)."
+    },
+    "evidence": { "type": ["string", "null"] },
+    "notes": { "type": "string" }
+  }
+}
