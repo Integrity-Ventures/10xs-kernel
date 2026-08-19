@@ -83,20 +83,21 @@ function parseTsc(name, run) {
   return result(name, run.status === 0, { errors: errors.length, exit: run.status }, { errors: members });
 }
 
-// gate: { name, cmd, cwd, parser, args? }. cwd is resolved against repoRoot by the caller.
+// gate: { name, cmd, cwd, parse, args? }. `parse` names one of PARSER_NAMES (matches the
+// 10xs-kernel.json schema's "gates.<name>.parse" key). cwd is resolved against repoRoot.
 export function runGate(gate, repoRoot) {
-  const { name, cmd, cwd = ".", parser } = gate;
-  if (!PARSER_NAMES.includes(parser)) {
-    throw new Error(`unknown parser "${parser}" for gate "${name}" — supported: ${PARSER_NAMES.join(", ")}`);
+  const { name, cmd, cwd = ".", parse } = gate;
+  if (!PARSER_NAMES.includes(parse)) {
+    throw new Error(`unknown parser "${parse}" for gate "${name}" — supported: ${PARSER_NAMES.join(", ")}`);
   }
   const resolvedCwd = join(repoRoot, cwd);
-  if (parser === "jest-json") {
+  if (parse === "jest-json") {
     const outputFile = join(tmpdir(), `10xs-gate-${name}-${process.pid}-${Date.now()}-${Math.random()}.json`);
     const run = shell(`${cmd} --json --outputFile=${outputFile}`, resolvedCwd);
     return parseJestJson(name, run, resolvedCwd, outputFile);
   }
-  if (parser === "eslint-json") return parseEslintJson(name, shell(`${cmd} -f json`, resolvedCwd), resolvedCwd);
-  if (parser === "tsc") return parseTsc(name, shell(cmd, resolvedCwd));
+  if (parse === "eslint-json") return parseEslintJson(name, shell(`${cmd} -f json`, resolvedCwd), resolvedCwd);
+  if (parse === "tsc") return parseTsc(name, shell(cmd, resolvedCwd));
   return parseExitCode(name, shell(cmd, resolvedCwd));
 }
 
