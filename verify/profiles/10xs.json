@@ -1,0 +1,26 @@
+{
+  "_scope_note": "Reproduces the 10xs-ai-website monorepo's own path values as they were at extraction (2026-08-19), so the mapping from the old hardcoded behaviour to this package's config is readable rather than asserted. Not a default — a repo with no 10xs-kernel.json at all gets verify/config.mjs's generic defaults instead, and that is a supported, working state. The `gates` entry below is illustrative only: the monorepo's real gate suite (tsc, eslint, jest, lambda, check-files, build, ssr-content) is NOT reproducible through this package's four generic parsers alone — check-files, lambda, build and ssr-content stay monorepo-only (see docs/scope in the README). Applying this profile to a repo that is not the 10xs monorepo will not make sense; copy the keys you need instead of the whole file.",
+  "baseRef": "origin/dev",
+  "eventsDir": "engineering/events",
+  "eventSchema": "engineering/events/schema/event.v1.schema.json",
+  "reportPrefixes": [
+    "engineering/workflow/task_reports/",
+    "engineering/events/"
+  ],
+  "evidencePrefix": "engineering/qa/runs/evidence",
+  "instructionsPrefix": "engineering/workflow/instructions/",
+  "probeRegistryDir": "engineering/qa/probes/registry",
+  "frozenProbeRegistry": "engineering/qa/probes/registry.json",
+  "appendFiles": [
+    "engineering/qa/runs/ledger.jsonl",
+    "engineering/integration_tracker.csv"
+  ],
+  "project": "10xs-ai-website",
+  "gates": {
+    "jest": {
+      "cmd": "npx jest --ci --silent",
+      "cwd": "apps/web",
+      "parse": "jest-json"
+    }
+  }
+}
