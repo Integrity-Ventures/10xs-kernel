@@ -59,8 +59,15 @@ export function assertCleanWorktree(repo) {
   }
 }
 
-// In-place checkout used by the --no-worktree default: caller is responsible for restoring HEAD
-// via checkoutRef(repo, originalRef) afterwards.
+// In-place checkout of the base ref under measurement, used by the --no-worktree default.
+// Always detached: this is a throwaway measurement checkout, never meant to move a branch tip.
 export function checkoutRef(repo, ref) {
   git(["checkout", "--detach", ref], repo);
+}
+
+// Restores the working tree to whatever it was before checkoutRef — a real `git checkout <ref>`,
+// NOT --detach, so restoring to a branch reattaches HEAD to that branch instead of leaving it
+// detached at the same commit. Caller passes back exactly what it captured before checkoutRef.
+export function restoreRef(repo, ref) {
+  git(["checkout", ref], repo);
 }

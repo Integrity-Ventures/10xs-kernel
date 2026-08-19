@@ -10,7 +10,7 @@ import { execFileSync } from "node:child_process";
 import { runGates } from "./gates.mjs";
 import { compareGates, renderComparisons } from "./compare.mjs";
 import { emitGateEvent } from "./emit-gate-event.mjs";
-import { prepareWorktree, assertCleanWorktree, checkoutRef, resolveRef } from "./worktree.mjs";
+import { prepareWorktree, assertCleanWorktree, checkoutRef, restoreRef, resolveRef } from "./worktree.mjs";
 import { loadConfig } from "./config.mjs";
 
 function options(argv, cfg) {
@@ -65,7 +65,7 @@ function runInPlace(repo, cfg, args) {
   checkoutRef(repo, args.base);
   console.log(`base ${args.base} -> ${baseSha} (working tree, checked out in place)`);
   let baseGates;
-  try { baseGates = runGates(repo, cfg.gates, args.only); } finally { checkoutRef(repo, originalRef); }
+  try { baseGates = runGates(repo, cfg.gates, args.only); } finally { restoreRef(repo, originalRef); }
   return { baseSha, headSha, baseGates, headGates };
 }
 
